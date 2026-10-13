@@ -1,0 +1,14 @@
+node_modules/
+__pycache__/
+*.pyc
+renders/
+snaps/
+_work/
+.hyperframes/
+.thumbnails/
+.waveform-cache/
+plantilla/*/assets/audio/
+plantilla/*/compositions/
+plantilla/*/index.html
+.DS_Store
+Thumbs.db

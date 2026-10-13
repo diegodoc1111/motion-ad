@@ -1,0 +1,80 @@
+<template>
+<style>
+#root{position:absolute;inset:0;overflow:hidden;font-family:"Inter",sans-serif;color:#F3EFE4}
+/*COMMON*/
+.f01-bg{position:absolute;inset:0;background:#121216;background-image:repeating-linear-gradient(90deg,rgba(243,239,228,.07) 0 1px,transparent 1px 120px)}
+.f01-lanes{position:absolute;left:0;top:930px;width:2400px;height:120px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2400' height='120'%3E%3Ctext x='60' y='100' font-family='monospace' font-weight='700' font-size='96' fill='rgba(243,239,228,.09)' letter-spacing='300'%3E1 2 3 4 5 6 7%3C/text%3E%3C/svg%3E");background-repeat:no-repeat}
+.f01-eye{position:absolute;left:72px;top:64px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#A9A79F}
+.f01-eye b{color:#D6FF3F;font-weight:700}
+.f01-clock{position:absolute;right:72px;top:40px;font-family:"League Gothic";font-size:150px;line-height:1;color:#D6FF3F;font-variant-numeric:tabular-nums;transform-origin:100% 0}
+.f01-tag{position:absolute;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#D6FF3F;border:3px solid #D6FF3F;padding:10px 18px;white-space:nowrap}
+#f01-tag1{right:72px;top:210px}
+#f01-tag2{left:72px;top:950px;color:#F3EFE4;border-color:#F3EFE4}
+#f01-reveal,#f01-echo{position:absolute;inset:0}
+#f01-shoe{left:210px;top:70px}
+#f01-e1,#f01-e2{left:210px;top:70px;transform-origin:0 100%}
+#f01-wire{left:210px;top:70px;opacity:0}
+.f01-wire-draw svg .ln{stroke-dasharray:3000;stroke-dashoffset:3000}
+#f01-rule{position:absolute;left:210px;top:818px;width:1500px;height:3px;background:#D6FF3F;transform-origin:0 50%}
+#f01-scan{position:absolute;left:0;top:0;width:6px;height:1080px;background:#D6FF3F;box-shadow:0 0 0 2px rgba(214,255,63,.35)}
+#f01-haze{position:absolute;left:6px;top:0;width:44px;height:1080px;background:linear-gradient(90deg,rgba(214,255,63,.28),rgba(214,255,63,0))}
+#f01-strip{position:absolute;left:0;bottom:0;width:1920px;height:6px;background:#D6FF3F;transform-origin:0 50%}
+</style>
+<div id="root" data-composition-id="f01-photo-finish" data-width="1920" data-height="1080">
+  <div id="f01-bg" class="clip f01-bg" data-start="0" data-duration="{{DUR}}" data-track-index="0"></div>
+  {{KIT|f01|01|PHOTO-FINISH|ink}}
+  <div id="f01-lanes" class="f01-lanes"></div>
+  <div id="f01-eye" class="f01-eye"><b>RÁFAGA</b> · LAB</div>
+  <div id="f01-clock" class="f01-clock">00:00.00</div>
+  <div id="f01-rule"></div>
+  <div id="f01-echo">
+    {{PRODUCTO|carbon|1500|f01-e1}}
+    {{PRODUCTO|carbon|1500|f01-e2}}
+  </div>
+  <div id="f01-reveal">
+    {{PRODUCTO|carbon|1500|f01-shoe}}
+    {{PRODUCTO|wire|1500|f01-wire|f01-wire-draw}}
+  </div>
+  <div id="f01-scanwrap" style="position:absolute;left:0;top:0;width:60px;height:1080px"><div id="f01-scan"></div><div id="f01-haze"></div></div>
+  <div id="f01-tag1" class="f01-tag">RF-27</div>
+  <div id="f01-tag2" class="f01-tag">PROTOTIPO 27</div>
+  <div id="f01-cota1" class="cota" style="left:210px;top:852px;width:1500px;color:#A9A79F"><i style="left:0;top:14px;width:100%;height:2px"></i><i style="left:0;top:4px;width:2px;height:22px"></i><i style="right:0;top:4px;width:2px;height:22px"></i><span style="position:absolute;left:690px;top:26px">312 MM</span></div>
+  <div id="f01-cota2" class="cota" style="left:1740px;top:90px;height:730px;color:#A9A79F"><i style="left:14px;top:0;width:2px;height:100%"></i><i style="left:4px;top:0;width:22px;height:2px"></i><i style="left:4px;bottom:0;width:22px;height:2px"></i><span style="position:absolute;left:34px;top:350px">128 MM</span></div>
+  <div id="f01-chip1" class="chip" style="left:72px;top:880px;color:#A9A79F">DROP 8 MM</div>
+  <div id="f01-chip2" class="chip" style="left:290px;top:880px;color:#A9A79F">SPEC 27-A</div>
+  <div id="f01-strip"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+(() => {
+  /*KITJS*/
+  const tl = gsap.timeline({ paused: true }); kit(tl, "f01", {{DUR}});
+  const D = 2.337, X0 = 120, X1 = 1800, T0 = 0.2, TS = 1.1;
+  // clock: elapsed video time (this frame starts at 0)
+  const clk = document.getElementById("f01-clock"), o = { t: 0 };
+  const fmt = s => { const m = Math.floor(s / 60), ss = Math.floor(s % 60), cc = Math.floor((s * 100) % 100); return `${String(m).padStart(2,"0")}:${String(ss).padStart(2,"0")}.${String(cc).padStart(2,"0")}`; };
+  tl.to(o, { t: D, duration: D, ease: "none", onUpdate: () => { clk.textContent = fmt(o.t); } }, 0);
+  tl.fromTo("#f01-clock", { opacity: 0, scale: 1 }, { opacity: 1, scale: 1.06, duration: 2.0, ease: "power1.out" }, T0);
+  tl.fromTo("#f01-eye", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }, 0.05);
+  tl.fromTo("#f01-lanes", { x: 0 }, { x: -20, duration: D, ease: "none" }, 0);
+  // scan line + slit-scan reveal
+  tl.fromTo("#f01-scanwrap", { x: X0 }, { x: X1, duration: TS, ease: "power2.inOut" }, T0);
+  tl.fromTo("#f01-reveal", { clipPath: `inset(0px ${1920 - X0}px 0px 0px)` }, { clipPath: `inset(0px ${1920 - X1}px 0px 0px)`, duration: TS, ease: "power2.inOut" }, T0);
+  tl.fromTo("#f01-echo", { clipPath: `inset(0px ${1920 - X0 - 260}px 0px 0px)` }, { clipPath: `inset(0px ${Math.max(0, 1920 - X1 - 260)}px 0px 0px)`, duration: TS, ease: "power2.inOut" }, T0);
+  tl.fromTo("#f01-e1", { scaleX: 1.6, opacity: 0.22, x: 0 }, { scaleX: 1.0, opacity: 0, duration: TS + 0.15, ease: "power2.inOut" }, T0);
+  tl.fromTo("#f01-e2", { scaleX: 1.3, opacity: 0.14, x: 0 }, { scaleX: 1.0, opacity: 0, duration: TS + 0.15, ease: "power2.inOut" }, T0);
+  tl.fromTo("#f01-scanwrap", { x: X1 }, { x: 2100, duration: 0.18, ease: "power3.in", immediateRender: false }, 1.9);
+  // tags on the beats
+  tl.fromTo("#f01-tag1", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(1.6)" }, 0.522);
+  tl.fromTo("#f01-tag2", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(1.6)" }, 1.043);
+  // measurement scan: wireframe draws over the shoe, ground rule, progress strip
+  tl.fromTo("#f01-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 1.3);
+  tl.set("#f01-wire", { opacity: 0.6 }, 1.3);
+  tl.fromTo("#f01-wire svg .ln", { strokeDashoffset: 3000 }, { strokeDashoffset: 0, duration: 0.45, ease: "power2.out", stagger: 0.012 }, 1.3);
+  tl.fromTo(["#f01-cota1", "#f01-cota2"], { opacity: 0 }, { opacity: 1, duration: 0.25 }, 1.45);
+  tl.fromTo(["#f01-chip1", "#f01-chip2"], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.25, ease: "power3.out", stagger: 0.08 }, 1.6);
+  tl.fromTo("#f01-strip", { scaleX: 0 }, { scaleX: 0.14, duration: D, ease: "none" }, 0);
+  window.__timelines["f01-photo-finish"] = tl;
+})();
+</script>
+</template>

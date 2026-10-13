@@ -1,0 +1,90 @@
+<template>
+<style>
+#root{position:absolute;inset:0;overflow:hidden;font-family:"Inter",sans-serif;color:#121216}
+/*COMMON*/
+.f06-bg{position:absolute;inset:0;background:#F3EFE4;background-image:repeating-linear-gradient(0deg,rgba(18,18,22,.09) 0 1px,rgba(0,0,0,0) 1px 60px),repeating-linear-gradient(90deg,rgba(18,18,22,.09) 0 1px,rgba(0,0,0,0) 1px 60px)}
+#f06-macro{position:absolute;left:1180px;top:800px;width:640px;height:200px;border:3px solid #121216;overflow:hidden;background:#EDE8DA}
+#f06-macro .shoe{left:-1000px;top:-1150px}
+#f06-macro-lab{position:absolute;left:12px;top:10px;font-family:"Space Mono";font-weight:700;font-size:20px;letter-spacing:.16em;color:#121216;background:#D6FF3F;padding:4px 10px}
+#f06-sheet{position:absolute;left:48px;top:48px;width:1824px;height:984px;border:3px solid #121216;box-sizing:border-box}
+.f06-eye{position:absolute;top:70px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#6E6A63}
+#f06-eye1{left:96px} #f06-eye2{right:96px}
+#f06-base{position:absolute;left:720px;top:758px;width:1150px;height:3px;background:#121216;transform-origin:0 50%}
+#f06-shoe{left:720px;top:185px;transform-origin:50% 100%}
+.f06-ring{position:absolute;border-radius:50%;border:3px solid #D6FF3F;opacity:0}
+.f06-ring.c{border-color:#FF4A3D}
+.f06-lab{position:absolute;left:96px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#6E6A63}
+.f06-track{position:absolute;left:96px;width:640px;height:64px;border:3px solid #121216;box-sizing:border-box}
+.f06-fill{position:absolute;left:0;top:0;height:100%;width:100%;background:#D6FF3F;transform-origin:0 50%}
+.f06-fig{position:absolute;left:96px;width:640px;text-align:right;font-family:"League Gothic";font-size:150px;line-height:.85;color:#121216;font-variant-numeric:tabular-nums;white-space:nowrap}
+#f06-l1{top:300px} #f06-t1{top:430px} #f06-f1{top:290px}
+#f06-l2{top:560px} #f06-t2{top:690px} #f06-f2{top:550px}
+#f06-stampwrap{position:absolute;left:1120px;top:300px;transform-origin:50% 50%}
+#f06-stampsh{position:absolute;left:10px;top:10px;width:100%;height:100%;background:#121216;opacity:0}
+#f06-stamp{position:relative;font-family:"Space Mono";font-weight:700;font-size:34px;letter-spacing:.16em;color:#FF4A3D;border:6px solid #FF4A3D;padding:16px 26px;white-space:nowrap;background:#F3EFE4}
+#f06-chip{position:absolute;left:96px;top:930px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#A6C92E;border:3px solid #121216;padding:10px 18px;white-space:nowrap;background:#F3EFE4}
+</style>
+<div id="root" data-composition-id="f06-laboratorio" data-width="1920" data-height="1080">
+  <div id="f06-bg" class="clip f06-bg" data-start="0" data-duration="{{DUR}}" data-track-index="0"></div>
+  <div id="f06-sheet"></div>
+  <div id="f06-eye1" class="f06-eye">04 · LABORATORIO</div>
+  <div id="f06-eye2" class="f06-eye">RF-27 · HOJA 06</div>
+  {{KIT|f06|06|LABORATORIO|paper}}
+  <div id="f06-shadow" class="shadow" style="left:780px;top:742px;width:1060px"></div>
+  <div id="f06-rings"></div>
+  <div id="f06-base"></div>
+  {{PRODUCTO|carbon|1150|f06-shoe}}
+  <div id="f06-l1" class="f06-lab">REBOTE</div><div id="f06-t1" class="f06-track"><div id="f06-fill1" class="f06-fill"></div></div><div id="f06-f1" class="f06-fig">0%</div>
+  <div id="f06-l2" class="f06-lab">AGARRE</div><div id="f06-t2" class="f06-track"><div id="f06-fill2" class="f06-fill"></div></div><div id="f06-f2" class="f06-fig">0%</div>
+  <div id="f06-stampwrap"><div id="f06-stampsh"></div><div id="f06-stamp">PROBADO EN PISTA</div></div>
+  <div id="f06-chip">RETORNO DE ENERGÍA +31%</div>
+  <div id="f06-c2" class="chip" style="right:96px;top:120px;color:#6E6A63">PISTA SINTÉTICA · 22 °C</div>
+  <div id="f06-macro">{{PRODUCTO|carbon|2500|f06-macro-shoe}}<div id="f06-macro-lab">DETALLE SUELA ×2</div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+(() => {
+  /*KITJS*/
+  const tl = gsap.timeline({ paused: true }); kit(tl, "f06", {{DUR}});
+  const F = 1 / 30;
+  tl.fromTo("#f06-shadow", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.05);
+  tl.fromTo("#f06-c2", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.4);
+  tl.fromTo("#f06-macro", { opacity: 0, scale: 0.9, transformOrigin: "100% 100%" }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.4)" }, 1.75);
+  tl.fromTo("#f06-macro-shoe", { x: 0 }, { x: -120, duration: 0.6, ease: "none" }, 1.8);
+  tl.fromTo("#f06-sheet", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0);
+  tl.fromTo("#f06-eye1", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.05);
+  tl.fromTo("#f06-eye2", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.1);
+  tl.fromTo("#f06-base", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, 0);
+  // the shoe presses and springs back; pressure rings bloom under heel and forefoot, then breathe
+  tl.fromTo("#f06-shoe", { scaleY: 1 }, { scaleY: 0.94, duration: 0.08, ease: "power2.in" }, 0);
+  tl.to("#f06-shoe", { scaleY: 1, duration: 0.32, ease: "elastic.out(1, 0.5)" }, 0.08);
+  const host = document.getElementById("f06-rings");
+  [[915, 758], [1617, 758]].forEach(([cx, cy], g) => {
+    for (let k = 0; k < 5; k++) {
+      const r = document.createElement("div"); r.className = "f06-ring" + (k < 2 ? " c" : ""); r.id = `f06-ring${g}${k}`;
+      const w = 90 + 70 * k, h = 26 + 20 * k; r.style.cssText += `left:${cx - w / 2}px;top:${cy - h / 2}px;width:${w}px;height:${h}px`; host.appendChild(r);
+      tl.fromTo(r, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1 - k * 0.12, duration: 0.3, ease: "back.out(1.8)" }, 0.08 + k * 0.05 + g * 0.03);
+      tl.to(r, { scale: 1.03, duration: 0.55, ease: "sine.inOut", yoyo: true, repeat: 2 }, 0.5 + k * 0.07);
+    }
+  });
+  // bars + counting figures landing on the beats
+  const f1 = document.getElementById("f06-f1"), f2 = document.getElementById("f06-f2"), o1 = { v: 0 }, o2 = { v: 0 };
+  tl.fromTo("#f06-l1", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.25, ease: "power3.out" }, 0.12);
+  tl.fromTo("#f06-t1", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 0.12);
+  tl.fromTo("#f06-fill1", { scaleX: 0 }, { scaleX: 0.94, duration: 0.4, ease: "power3.out" }, 0.122);
+  tl.fromTo("#f06-f1", { opacity: 0 }, { opacity: 1, duration: 0.1 }, 0.122);
+  tl.to(o1, { v: 94, duration: 0.4, ease: "power3.out", onUpdate: () => { f1.textContent = Math.round(o1.v) + "%"; } }, 0.122);
+  tl.fromTo("#f06-l2", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.25, ease: "power3.out" }, 0.6);
+  tl.fromTo("#f06-t2", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 0.6);
+  tl.fromTo("#f06-fill2", { scaleX: 0 }, { scaleX: 0.98, duration: 0.42, ease: "power3.out" }, 0.623);
+  tl.fromTo("#f06-f2", { opacity: 0 }, { opacity: 1, duration: 0.1 }, 0.623);
+  tl.to(o2, { v: 98, duration: 0.42, ease: "power3.out", onUpdate: () => { f2.textContent = Math.round(o2.v) + "%"; } }, 0.623);
+  // the stamp presses in with a shake and a hard offset shadow
+  tl.fromTo("#f06-stampwrap", { scale: 1.6, opacity: 0, rotation: -8 }, { scale: 1, opacity: 1, rotation: -8, duration: 0.14, ease: "power4.in" }, 1.3);
+  tl.to("#f06-stampwrap", { keyframes: [{ x: -5, y: 4, duration: F }, { x: 3, y: -2, duration: F }, { x: 0, y: 0, duration: F }] }, 1.44);
+  tl.fromTo("#f06-stampsh", { opacity: 0 }, { opacity: 1, duration: 0.08 }, 1.44);
+  tl.fromTo("#f06-chip", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(1.6)" }, 1.565);
+  window.__timelines["f06-laboratorio"] = tl;
+})();
+</script>
+</template>

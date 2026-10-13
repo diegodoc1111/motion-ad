@@ -1,0 +1,83 @@
+<template>
+<style>
+#root{position:absolute;inset:0;overflow:hidden;font-family:"Inter",sans-serif;color:#121216}
+/*COMMON*/
+.f08-bg{position:absolute;inset:0;background:#F3EFE4;background-image:repeating-linear-gradient(0deg,rgba(18,18,22,.07) 0 1px,rgba(0,0,0,0) 1px 60px),repeating-linear-gradient(90deg,rgba(18,18,22,.07) 0 1px,rgba(0,0,0,0) 1px 60px)}
+.f08-eye{position:absolute;left:72px;top:64px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#6E6A63}
+.f08-eye b{color:#121216}
+.f08-clock{position:absolute;right:72px;top:40px;font-family:"League Gothic";font-size:120px;line-height:1;color:#121216;font-variant-numeric:tabular-nums}
+#f08-fill,#f08-wirewrap{position:absolute;inset:0}
+#f08-shoe,#f08-wire{left:90px;top:190px}
+#f08-shadow{left:140px;top:806px;width:1150px}
+#f08-scanwrap{position:absolute;left:0;top:0;width:60px;height:1080px}
+#f08-scan{position:absolute;left:0;top:0;width:6px;height:1080px;background:#121216}
+#f08-haze{position:absolute;left:-44px;top:0;width:44px;height:1080px;background:linear-gradient(270deg,rgba(214,255,63,.6),rgba(214,255,63,0))}
+#f08-cardsh{position:absolute;left:1412px;top:212px;width:440px;height:650px;background:#121216}
+#f08-card{position:absolute;left:1400px;top:200px;width:440px;height:650px;background:#FBF9F3;border:3px solid #121216;box-sizing:border-box;padding:26px 28px}
+.f08-cb{font-family:"Archivo Black";font-size:40px;line-height:1;letter-spacing:-.02em}
+.f08-cm{font-family:"League Gothic";font-size:112px;line-height:.9;margin-top:6px}
+.f08-cm u{text-decoration:none;display:block;height:10px;width:100%;background:#D6FF3F}
+.f08-row{display:flex;justify-content:space-between;font-family:"Space Mono";font-weight:700;font-size:19px;letter-spacing:.12em;color:#6E6A63;border-top:2px solid #121216;padding:9px 0}
+.f08-row b{color:#121216}
+#f08-bar{height:64px;margin-top:14px;background:repeating-linear-gradient(90deg,#121216 0 3px,rgba(0,0,0,0) 3px 6px,#121216 6px 10px,rgba(0,0,0,0) 10px 13px,#121216 13px 15px,rgba(0,0,0,0) 15px 21px,#121216 21px 23px,rgba(0,0,0,0) 23px 26px);transform-origin:0 50%}
+#f08-num{font-family:"Space Mono";font-weight:700;font-size:19px;letter-spacing:.3em;color:#121216;margin-top:8px}
+#f08-time{margin-top:18px;font-family:"League Gothic";font-size:72px;line-height:1;color:#121216}
+#f08-time small{display:block;font-family:"Space Mono";font-weight:700;font-size:18px;letter-spacing:.2em;color:#6E6A63;margin-bottom:4px}
+.f08-tag{position:absolute;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#121216;border:3px solid #121216;padding:10px 18px;white-space:nowrap;background:#F3EFE4}
+#f08-tag1{left:72px;top:950px} #f08-tag2{left:478px;top:950px;color:#6E6A63;border-color:#6E6A63}
+#f08-strip{position:absolute;left:0;bottom:0;width:1920px;height:6px;background:#D6FF3F;transform-origin:0 50%}
+</style>
+<div id="root" data-composition-id="f08-llegada" data-width="1920" data-height="1080">
+  <div id="f08-bg" class="clip f08-bg" data-start="0" data-duration="{{DUR}}" data-track-index="0"></div>
+  {{KIT|f08|08|LLEGADA|paper}}
+  <div id="f08-eye" class="f08-eye"><b>RÁFAGA</b> · LAB</div>
+  <div id="f08-clock" class="f08-clock">00:14.08</div>
+  <div id="f08-shadow" class="shadow"></div>
+  <div id="f08-wirewrap">{{PRODUCTO|wire-ink|1250|f08-wire}}</div>
+  <div id="f08-fill">{{PRODUCTO|carbon|1250|f08-shoe}}</div>
+  <div id="f08-scanwrap"><div id="f08-scan"></div><div id="f08-haze"></div></div>
+  <div id="f08-cardsh"></div>
+  <div id="f08-card">
+    <div class="f08-cb">RÁFAGA</div>
+    <div class="f08-cm">RF-27<u></u></div>
+    <div class="f08-row"><span>ESTILO</span><b>RUNNER</b></div>
+    <div class="f08-row"><span>COLOR</span><b>CARBÓN / LIMA</b></div>
+    <div class="f08-row"><span>TALLA</span><b>36 – 46</b></div>
+    <div class="f08-row"><span>PESO</span><b>275 G</b></div>
+    <div id="f08-bar"></div>
+    <div id="f08-num">7 27027 00015 0</div>
+    <div id="f08-time"><small>TIEMPO</small>00:15.00</div>
+  </div>
+  <div id="f08-tag1" class="f08-tag">LLEGADA · 15.00 s</div>
+  <div id="f08-tag2" class="f08-tag">VUELTA 27 · MEJOR TIEMPO</div>
+  <div id="f08-strip"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+(() => {
+  /*KITJS*/
+  const tl = gsap.timeline({ paused: true }); kit(tl, "f08", {{DUR}});
+  const F = 1 / 30, T0 = 14.087, TS = 0.36, X0 = 1420, X1 = 60;
+  const clk = document.getElementById("f08-clock"), o = { t: T0 };
+  const fmt = s => { const m = Math.floor(s / 60), ss = Math.floor(s % 60), cc = Math.floor((s * 100) % 100 + 1e-6); return `${String(m).padStart(2,"0")}:${String(ss).padStart(2,"0")}.${String(cc).padStart(2,"0")}`; };
+  tl.fromTo(o, { t: T0 }, { t: 15.0, duration: 0.4, ease: "power2.in", onUpdate: () => { clk.textContent = fmt(Math.min(15, o.t)); } }, 0);
+  tl.fromTo("#f08-clock", { color: "#121216" }, { keyframes: [{ color: "#D6FF3F", duration: F }, { color: "#121216", duration: F }, { color: "#D6FF3F", duration: F }, { color: "#121216", duration: F }] }, 0.4);
+  // the finish line sweeps right → left and DEVELOPS the shoe: wireframe ahead of it, full product behind it
+  tl.fromTo("#f08-scanwrap", { x: X0 }, { x: X1, duration: TS, ease: "power3.out" }, 0);
+  tl.fromTo("#f08-fill", { clipPath: `inset(0px 0px 0px ${X0}px)` }, { clipPath: `inset(0px 0px 0px ${X1}px)`, duration: TS, ease: "power3.out" }, 0);
+  tl.fromTo("#f08-wirewrap", { clipPath: `inset(0px ${1920 - X0}px 0px 0px)`, opacity: 0.55 }, { clipPath: `inset(0px ${1920 - X1}px 0px 0px)`, opacity: 0.55, duration: TS, ease: "power3.out" }, 0);
+  tl.fromTo("#f08-scanwrap", { opacity: 1 }, { opacity: 0, duration: 0.12, immediateRender: false }, TS + 0.02);
+  tl.fromTo("#f08-shadow", { opacity: 0, scaleX: 0.7 }, { opacity: 1, scaleX: 1, duration: 0.35, ease: "power2.out" }, 0.1);
+  // the product label slides in, its barcode prints, the time stamps
+  tl.fromTo(["#f08-cardsh", "#f08-card"], { x: 360, opacity: 0 }, { x: 0, opacity: 1, duration: 0.36, ease: "power4.out" }, 0.18);
+  tl.fromTo("#f08-bar", { scaleX: 0 }, { scaleX: 1, duration: 0.28, ease: "power2.out" }, 0.42);
+  tl.fromTo("#f08-num", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 0.6);
+  tl.fromTo("#f08-time", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.2, ease: "power3.out" }, 0.45);
+  tl.fromTo("#f08-tag1", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(1.6)" }, 0.52);
+  tl.fromTo("#f08-tag2", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(1.6)" }, 0.6);
+  tl.fromTo("#f08-strip", { scaleX: 0.93 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, 0.4);
+  // final frame: everything holds dead still from 0.82s
+  window.__timelines["f08-llegada"] = tl;
+})();
+</script>
+</template>

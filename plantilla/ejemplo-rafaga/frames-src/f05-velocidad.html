@@ -1,0 +1,81 @@
+<template>
+<style>
+#root{position:absolute;inset:0;overflow:hidden;font-family:"Inter",sans-serif;color:#F3EFE4}
+/*COMMON*/
+.f05-bg{position:absolute;inset:0;background:#121216}
+#f05-stage{position:absolute;inset:0;perspective:900px;perspective-origin:1180px 520px}
+#f05-world{position:absolute;inset:0;transform-style:preserve-3d}
+.f05-rect{position:absolute;left:380px;top:70px;width:1600px;height:900px;border:3px solid #D6FF3F;box-sizing:border-box;transform-style:preserve-3d}
+.f05-rect.k{border-color:rgba(214,255,63,.55)}
+#f05-vl{position:absolute;inset:0}
+#f05-vl line{stroke:rgba(214,255,63,.22);stroke-width:2px}
+.f05-bar{position:absolute;height:3px;background:#D6FF3F;left:0;top:0;transform-origin:0 50%}
+#f05-rays{position:absolute;left:1180px;top:520px;width:0;height:0}
+.f05-ray{position:absolute;left:0;top:-1px;width:1500px;height:2px;background:rgba(214,255,63,.12);transform-origin:0 50%}
+#f05-shoewrap{position:absolute;left:680px;top:300px;width:1200px;height:640px}
+#f05-shoewrap .shoe{left:0;top:0}
+.f05-echo{transform-origin:100% 50%}
+#f05-lab{position:absolute;left:96px;top:290px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#A9A79F}
+#f05-stat{position:absolute;left:84px;top:340px;font-family:"League Gothic";font-size:460px;line-height:.85;color:#D6FF3F;font-variant-numeric:tabular-nums;transform-origin:0 100%;white-space:nowrap}
+#f05-kg{position:absolute;left:96px;top:800px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#D6FF3F;border:3px solid #D6FF3F;padding:10px 18px;white-space:nowrap}
+</style>
+<div id="root" data-composition-id="f05-velocidad" data-width="1920" data-height="1080">
+  <div id="f05-bg" class="clip f05-bg" data-start="0" data-duration="{{DUR}}" data-track-index="0"></div>
+  <svg id="f05-vl" viewBox="0 0 1920 1080"><line x1="0" y1="0" x2="1180" y2="520" /><line x1="1920" y1="0" x2="1180" y2="520" /><line x1="0" y1="1080" x2="1180" y2="520" /><line x1="1920" y1="1080" x2="1180" y2="520" /><line x1="0" y1="520" x2="1180" y2="520" /><line x1="1180" y1="0" x2="1180" y2="520" /></svg>
+  {{KIT|f05|05|VELOCIDAD|ink}}
+  <div id="f05-rays"></div>
+  <div id="f05-stage"><div id="f05-world"></div></div>
+  <div id="f05-c1" class="chip" style="right:72px;top:300px;color:#F3EFE4">VEL MÁX 27 KM/H</div>
+  <div id="f05-c2" class="chip" style="right:72px;top:370px;color:#A9A79F">CADENCIA 180 PPM</div>
+  <div id="f05-bars"></div>
+  <div id="f05-shoewrap">
+    {{PRODUCTO|lima-ink|1200|f05-e3|f05-echo}}
+    {{PRODUCTO|lima-ink|1200|f05-e2|f05-echo}}
+    {{PRODUCTO|lima-ink|1200|f05-e1|f05-echo}}
+    {{PRODUCTO|lima-ink|1200|f05-shoe}}
+  </div>
+  <div id="f05-lab">PESO · GRAMOS</div>
+  <div id="f05-stat">0</div>
+  <div id="f05-kg">0,275 KG</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+(() => {
+  /*KITJS*/
+  const tl = gsap.timeline({ paused: true }); kit(tl, "f05", {{DUR}});
+  const D = 2.087, F = 1 / 30;
+  const rays = document.getElementById("f05-rays");
+  for (let i = 0; i < 24; i++) { const r = document.createElement("div"); r.className = "f05-ray"; r.id = "f05-ray" + i; r.style.transform = `rotate(${i * 15}deg)`; rays.appendChild(r); }
+  tl.fromTo("#f05-rays", { rotation: 0, opacity: 0 }, { rotation: 14, opacity: 1, duration: D, ease: "none" }, 0);
+  tl.fromTo("#f05-c1", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.6);
+  tl.fromTo("#f05-c2", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.8);
+  // tunnel: 18 rectangles stepped back in Z; the camera (world) flies forward at constant speed
+  const world = document.getElementById("f05-world");
+  for (let i = 0; i < 18; i++) { const r = document.createElement("div"); r.className = "f05-rect" + (i % 2 ? " k" : ""); r.id = "f05-r" + i; r.style.transform = `translateZ(${-450 * i}px)`; world.appendChild(r); }
+  tl.fromTo("#f05-world", { z: 0 }, { z: 3600, duration: 1.9, ease: "none" }, 0);
+  tl.to("#f05-world", { z: 3900, duration: D - 1.9, ease: "power1.out" }, 1.9);
+  // speed bars streaking right → left (finite repeats, index-derived rows)
+  const bars = document.getElementById("f05-bars");
+  for (let i = 0; i < 8; i++) {
+    const b = document.createElement("div"); b.className = "f05-bar"; b.id = "f05-bar" + i;
+    const w = 120 + (i * 53) % 140; b.style.width = w + "px"; b.style.top = (80 + ((i * 131) % 900)) + "px"; bars.appendChild(b);
+    tl.fromTo(b, { x: 2000 }, { x: -320, duration: 0.18, ease: "none", repeat: 10, repeatDelay: 0.02 }, i * 0.045);
+  }
+  // the shoe rockets in from the left-back with a ghost trail that collapses into it
+  tl.fromTo("#f05-shoewrap", { x: -1500, scale: 0.25 }, { x: 0, scale: 1, duration: 0.9, ease: "power3.out" }, 0.3);
+  [["#f05-e1", -90, 1.08, 0.4], ["#f05-e2", -170, 1.2, 0.25], ["#f05-e3", -260, 1.35, 0.15]].forEach(([s, dx, sx, op]) => {
+    tl.fromTo(s, { x: dx, scaleX: sx, opacity: op }, { x: 0, scaleX: 1, opacity: 0, duration: 0.9, ease: "power3.out" }, 0.3);
+  });
+  tl.fromTo("#f05-shoewrap", { y: 0 }, { y: -4, duration: 0.4, ease: "sine.inOut", yoyo: true, repeat: 1, immediateRender: false }, 1.25);
+  // stat: 0 → 275 landing on the downbeat
+  tl.fromTo("#f05-lab", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 1.04);
+  const st = document.getElementById("f05-stat"), o = { v: 0 };
+  tl.set("#f05-stat", { opacity: 1 }, 1.09);
+  tl.fromTo("#f05-stat", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.475, ease: "power2.out" }, 1.09);
+  tl.to(o, { v: 275, duration: 0.475, ease: "power2.out", onUpdate: () => { st.textContent = String(Math.round(o.v)); } }, 1.09);
+  tl.to("#f05-stat", { keyframes: [{ scale: 1.06, duration: F }, { scale: 1, duration: 2 * F }] }, 1.565);
+  tl.fromTo("#f05-kg", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(1.6)" }, 1.9);
+  window.__timelines["f05-velocidad"] = tl;
+})();
+</script>
+</template>

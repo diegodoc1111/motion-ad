@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1200" width="600" height="1200" overflow="visible">
+  <!-- PRODUCTO DE MUESTRA: una botella. Reemplázalo por tu producto siguiendo el mismo contrato:
+       · un <g id="g-parte"> por parte (de atrás hacia adelante) · rellenos con var(--c-…) y clase "ln"
+       · sombras clase "shade", brillos clase "hi", costuras/detalles finos clase "st" · trazo var(--c-ink) 7px -->
+  <style>
+    .ln{stroke:var(--c-ink);stroke-width:7;stroke-linejoin:round;stroke-linecap:round}
+    .shade{fill:var(--c-shade)} .hi{fill:var(--c-hi)}
+    .st{fill:none;stroke:var(--c-stitch);stroke-width:3;stroke-dasharray:10 8}
+  </style>
+  <g id="g-body">
+    <path class="ln" fill="var(--c-body)" d="M190 330 C120 420 110 560 110 760 L110 1080 Q110 1160 190 1160 L410 1160 Q490 1160 490 1080 L490 760 C490 560 480 420 410 330 Z"/>
+    <path class="shade" d="M330 350 C420 430 440 580 440 760 L440 1120 Q440 1150 410 1150 L470 1150 Q490 1140 490 1080 L490 760 C490 560 480 420 410 330 Z"/>
+    <path class="hi" d="M150 420 C135 520 135 650 140 760 L140 1060 Q150 1120 175 1130 L165 1130 Q140 1110 130 1060 L130 760 C128 640 130 520 150 420 Z"/>
+    <path class="st" d="M150 790 L450 790 M150 1040 L450 1040"/>
+  </g>
+  <g id="g-neck">
+    <path class="ln" fill="var(--c-body2)" d="M230 200 L370 200 L410 330 L190 330 Z"/>
+  </g>
+  <g id="g-cap">
+    <rect class="ln" fill="var(--c-cap)" x="210" y="60" width="180" height="150" rx="18"/>
+    <rect class="shade" x="330" y="70" width="48" height="130" rx="12"/>
+    <path class="st" d="M230 95 L370 95 M230 125 L370 125 M230 155 L370 155"/>
+  </g>
+  <g id="g-label">
+    <rect class="ln" fill="var(--c-label)" x="140" y="820" width="320" height="200" rx="8"/>
+    <path class="shade" d="M400 830 L450 830 L450 1010 L400 1010 Z"/>
+  </g>
+  <g id="g-mark">
+    <path class="ln" fill="var(--c-accent)" d="M225 870 L330 870 L295 940 L365 940 L245 1010 L280 955 L215 955 Z"/>
+  </g>
+</svg>

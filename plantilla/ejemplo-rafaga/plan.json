@@ -1,0 +1,361 @@
+{
+ "duracion": 15.0,
+ "lienzo": [
+  1920,
+  1080
+ ],
+ "fondo": "#121216",
+ "musica": {
+  "archivo": "assets/audio/bgm.mp3",
+  "volumen": 0.72
+ },
+ "transicion_colores": {
+  "borde": [
+   "#FF4A3D",
+   "#D6FF3F"
+  ],
+  "flash": "#FFFFFF"
+ },
+ "escenas": [
+  {
+   "id": "f01-photo-finish",
+   "inicio": 0,
+   "fin": 2.087,
+   "entrada": "corte"
+  },
+  {
+   "id": "f02-anatomia",
+   "inicio": 2.087,
+   "fin": 4.174,
+   "entrada": "zoom"
+  },
+  {
+   "id": "f03-pisa-fuerte",
+   "inicio": 4.174,
+   "fin": 5.739,
+   "entrada": "corte"
+  },
+  {
+   "id": "f04-colorways",
+   "inicio": 5.739,
+   "fin": 8.348,
+   "entrada": "barrido"
+  },
+  {
+   "id": "f05-velocidad",
+   "inicio": 8.348,
+   "fin": 10.435,
+   "entrada": "zoom"
+  },
+  {
+   "id": "f06-laboratorio",
+   "inicio": 10.435,
+   "fin": 12.522,
+   "entrada": "corte"
+  },
+  {
+   "id": "f07-lockup",
+   "inicio": 12.522,
+   "fin": 14.087,
+   "entrada": "cromatico"
+  },
+  {
+   "id": "f08-llegada",
+   "inicio": 14.087,
+   "fin": 15.0,
+   "entrada": "flash"
+  }
+ ],
+ "sfx": [
+  [
+   0.0,
+   "whoosh-short",
+   0.5
+  ],
+  [
+   0.522,
+   "click",
+   0.5
+  ],
+  [
+   1.043,
+   "click",
+   0.5
+  ],
+  [
+   1.565,
+   "pop",
+   0.5
+  ],
+  [
+   1.9,
+   "whoosh",
+   0.55
+  ],
+  [
+   2.609,
+   "pop",
+   0.45
+  ],
+  [
+   3.13,
+   "pop",
+   0.45
+  ],
+  [
+   3.652,
+   "pop",
+   0.45
+  ],
+  [
+   3.987,
+   "click",
+   0.4
+  ],
+  [
+   4.174,
+   "impact-bass-1",
+   0.8
+  ],
+  [
+   4.696,
+   "impact-bass-2",
+   0.7
+  ],
+  [
+   5.217,
+   "thump",
+   0.9
+  ],
+  [
+   5.217,
+   "impact-bass-1",
+   0.6
+  ],
+  [
+   5.424,
+   "pop",
+   0.45
+  ],
+  [
+   5.739,
+   "whoosh",
+   0.55
+  ],
+  [
+   5.739,
+   "key-press",
+   0.4
+  ],
+  [
+   5.799,
+   "key-press",
+   0.4
+  ],
+  [
+   5.859,
+   "key-press",
+   0.4
+  ],
+  [
+   5.919,
+   "key-press",
+   0.4
+  ],
+  [
+   5.979,
+   "key-press",
+   0.4
+  ],
+  [
+   6.039,
+   "key-press",
+   0.4
+  ],
+  [
+   6.261,
+   "pop",
+   0.45
+  ],
+  [
+   6.782,
+   "key-press",
+   0.4
+  ],
+  [
+   6.842,
+   "key-press",
+   0.4
+  ],
+  [
+   6.902,
+   "key-press",
+   0.4
+  ],
+  [
+   6.962,
+   "key-press",
+   0.4
+  ],
+  [
+   7.022,
+   "key-press",
+   0.4
+  ],
+  [
+   7.082,
+   "key-press",
+   0.4
+  ],
+  [
+   7.04,
+   "pop",
+   0.45
+  ],
+  [
+   7.826,
+   "key-press",
+   0.4
+  ],
+  [
+   7.886,
+   "key-press",
+   0.4
+  ],
+  [
+   7.946,
+   "key-press",
+   0.4
+  ],
+  [
+   8.006,
+   "key-press",
+   0.4
+  ],
+  [
+   8.066,
+   "key-press",
+   0.4
+  ],
+  [
+   8.126,
+   "key-press",
+   0.4
+  ],
+  [
+   8.09,
+   "pop",
+   0.45
+  ],
+  [
+   8.348,
+   "whoosh",
+   0.6
+  ],
+  [
+   8.87,
+   "whoosh-short",
+   0.45
+  ],
+  [
+   9.913,
+   "thump",
+   0.9
+  ],
+  [
+   9.913,
+   "impact-bass-2",
+   0.6
+  ],
+  [
+   10.248,
+   "click",
+   0.4
+  ],
+  [
+   10.435,
+   "impact-bass-1",
+   0.8
+  ],
+  [
+   10.515,
+   "pop",
+   0.4
+  ],
+  [
+   10.957,
+   "pop",
+   0.45
+  ],
+  [
+   11.478,
+   "pop",
+   0.45
+  ],
+  [
+   11.735,
+   "thump",
+   0.8
+  ],
+  [
+   12.0,
+   "click",
+   0.4
+  ],
+  [
+   12.522,
+   "glitch-1",
+   0.6
+  ],
+  [
+   12.572,
+   "impact-bass-2",
+   0.8
+  ],
+  [
+   13.044,
+   "pop",
+   0.4
+  ],
+  [
+   13.124,
+   "pop",
+   0.4
+  ],
+  [
+   13.204,
+   "pop",
+   0.4
+  ],
+  [
+   13.565,
+   "glitch-1",
+   0.45
+  ],
+  [
+   13.822,
+   "click",
+   0.4
+  ],
+  [
+   14.02,
+   "sparkle",
+   0.4
+  ],
+  [
+   14.087,
+   "whoosh-short",
+   0.5
+  ],
+  [
+   14.487,
+   "chime",
+   0.55
+  ],
+  [
+   14.609,
+   "pop",
+   0.45
+  ]
+ ]
+}

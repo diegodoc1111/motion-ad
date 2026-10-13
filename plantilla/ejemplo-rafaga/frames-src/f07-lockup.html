@@ -1,0 +1,69 @@
+<template>
+<style>
+#root{position:absolute;inset:0;overflow:hidden;font-family:"Inter",sans-serif;color:#F3EFE4}
+/*COMMON*/
+.f07-bg{position:absolute;inset:0;background:#FF4A3D;background-image:repeating-linear-gradient(90deg,rgba(243,239,228,.12) 0 1px,rgba(0,0,0,0) 1px 120px)}
+.f07-ghost{position:absolute;left:96px;top:150px;font-family:"Archivo Black";font-size:300px;line-height:1;letter-spacing:-.02em;color:rgba(18,18,22,.3);-webkit-text-stroke:3px #121216;opacity:.16;white-space:nowrap}
+#f07-g2{left:136px;top:190px} #f07-g3{left:176px;top:230px}
+.f07-wm{position:absolute;left:96px;top:150px;font-family:"Archivo Black";font-size:300px;line-height:1;letter-spacing:-.02em;color:#F3EFE4;white-space:nowrap;transform-origin:0 50%}
+#f07-wmR{color:#121216;opacity:0} #f07-wmL{color:#D6FF3F;opacity:0}
+#f07-ring{position:absolute;left:846px;top:300px;width:400px;height:400px;margin:-200px 0 0 -200px;border:3px solid #F3EFE4;border-radius:50%;opacity:0}
+#f07-flash{position:absolute;inset:0;background:#fff;opacity:0}
+#f07-shoewrap{position:absolute;left:1000px;top:450px;width:880px;height:469px;transform-origin:50% 50%}
+#f07-shoewrap .shoe{left:0;top:0}
+#f07-tag{position:absolute;left:96px;top:740px;font-family:"Archivo Black";font-size:104px;line-height:1;letter-spacing:-.02em;color:#121216;white-space:nowrap}
+#f07-tag span{display:inline-block;margin-right:.22em}
+#f07-meta{position:absolute;left:96px;top:870px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#F3EFE4;white-space:nowrap}
+</style>
+<div id="root" data-composition-id="f07-lockup" data-width="1920" data-height="1080">
+  <div id="f07-bg" class="clip f07-bg" data-start="0" data-duration="{{DUR}}" data-track-index="0"></div>
+  <div id="f07-g1" class="f07-ghost" data-layout-allow-overflow="">RÁFAGA</div><div id="f07-g2" class="f07-ghost" data-layout-allow-overflow="">RÁFAGA</div><div id="f07-g3" class="f07-ghost" data-layout-allow-overflow="">RÁFAGA</div>
+  {{KIT|f07|07|LOCKUP|coral}}
+  <div id="f07-shadow" class="shadow" style="left:1020px;top:900px;width:840px"></div>
+  <div id="f07-ring"></div>
+  <div id="f07-c1" class="chip" style="right:72px;top:470px;color:#F3EFE4">LANZAMIENTO 27.10</div>
+  <div id="f07-c2" class="chip" style="right:72px;top:540px;color:#121216">RAFAGA.CO/RF27</div>
+  <div id="f07-wmR" class="f07-wm">RÁFAGA</div>
+  <div id="f07-wmL" class="f07-wm">RÁFAGA</div>
+  <div id="f07-wm" class="f07-wm">RÁFAGA</div>
+  <div id="f07-shoewrap">{{PRODUCTO|carbon|880|f07-shoe}}</div>
+  <div id="f07-tag"><span id="f07-w1">ROMPE</span><span id="f07-w2">EL</span><span id="f07-w3">AIRE.</span></div>
+  <div id="f07-meta">RF-27 · 2026 · RAFAGA.CO</div>
+  <div id="f07-flash"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+(() => {
+  /*KITJS*/
+  const tl = gsap.timeline({ paused: true }); kit(tl, "f07", {{DUR}});
+  const F = 1 / 30, B = 0.5217;
+  tl.fromTo("#f07-shadow", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.75);
+  tl.fromTo("#f07-c1", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.9);
+  tl.fromTo("#f07-c2", { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 1.05);
+  tl.fromTo(["#f07-g1", "#f07-g2", "#f07-g3"], { x: 0 }, { x: -30, duration: 1.565, ease: "none" }, 0);
+  // wordmark slam (logo-sting mechanics): land, one lime ring, exactly one white frame
+  tl.fromTo("#f07-wm", { scale: 1.15, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "expo.out" }, 0.05);
+  tl.fromTo("#f07-ring", { scale: 0.7, opacity: 0.9 }, { scale: 2.6, opacity: 0, duration: 0.5, ease: "power2.out" }, 0.45);
+  tl.set("#f07-flash", { opacity: 1 }, 0.45); tl.set("#f07-flash", { opacity: 0 }, 0.45 + F);
+  // the shoe flips in from 3D space, then floats
+  tl.fromTo("#f07-shoewrap", { transformPerspective: 1200, rotationY: -80, z: -500, opacity: 0 }, { rotationY: 0, z: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 0.3);
+  tl.to("#f07-shoewrap", { y: -5, duration: 0.33, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0.9);
+  // tagline waterfall + tracked-in meta line
+  ["#f07-w1", "#f07-w2", "#f07-w3"].forEach((s, i) => {
+    tl.set(s, { opacity: 0 }, 0); tl.set(s, { opacity: 1 }, B + i * 0.08);
+    tl.fromTo(s, { y: 90 }, { y: 0, duration: 0.3, ease: "power4.out" }, B + i * 0.08);
+  });
+  // tracked-in meta line: per-glyph x spread collapsing to the set tracking (no layout props animated)
+  const meta = document.getElementById("f07-meta"), txt = meta.textContent; meta.textContent = "";
+  const gl = [...txt].map((ch, i) => { const sp = document.createElement("span"); sp.id = "f07-m" + i; sp.style.display = "inline-block"; sp.textContent = ch === " " ? " " : ch; meta.appendChild(sp); return sp; });
+  const mid = (gl.length - 1) / 2;
+  gl.forEach((sp, i) => tl.fromTo(sp, { x: (i - mid) * 11, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.75));
+  // chromatic glitch burst on the beat: coral/lime copies tear ±14px on a quantized hash, then snap clean
+  const J = [[-14, 6], [11, -9], [-7, 13], [14, -4], [-10, -11], [8, 9]];
+  tl.set(["#f07-wmR", "#f07-wmL"], { opacity: 0.85 }, 1.043);
+  J.forEach(([a, b], i) => { tl.set("#f07-wmR", { x: a, y: b * 0.3 }, 1.043 + i * F); tl.set("#f07-wmL", { x: -a, y: -b * 0.3 }, 1.043 + i * F); tl.set("#f07-wm", { x: (i % 2 ? 4 : -4) }, 1.043 + i * F); });
+  tl.set(["#f07-wmR", "#f07-wmL"], { opacity: 0, x: 0, y: 0 }, 1.043 + J.length * F); tl.set("#f07-wm", { x: 0 }, 1.043 + J.length * F);
+  window.__timelines["f07-lockup"] = tl;
+})();
+</script>
+</template>

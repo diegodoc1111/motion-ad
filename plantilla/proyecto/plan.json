@@ -1,0 +1,17 @@
+{
+ "titulo": "MARCA — anuncio animado",
+ "duracion": 15.0,
+ "lienzo": [1920, 1080],
+ "fondo": "#121216",
+ "musica": {"archivo": "assets/audio/bgm.mp3", "volumen": 0.72},
+ "transicion_colores": {"borde": ["#FF4A3D", "#D6FF3F"], "flash": "#FFFFFF"},
+ "escenas": [
+  {"id": "f01-gancho", "inicio": 0, "fin": 2.087, "entrada": "corte"},
+  {"id": "f02-cierre", "inicio": 2.087, "fin": 4.174, "entrada": "zoom"}
+ ],
+ "sfx": [
+  [0.0, "whoosh-short", 0.5],
+  [0.522, "pop", 0.45],
+  [2.087, "whoosh", 0.55]
+ ]
+}

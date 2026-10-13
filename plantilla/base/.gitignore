@@ -1,0 +1,8 @@
+node_modules/
+renders/
+snaps/
+_work/
+.hyperframes/
+.thumbnails/
+.waveform-cache/
+compositions/frames/

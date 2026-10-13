@@ -1,0 +1,87 @@
+<template>
+<style>
+#root{position:absolute;inset:0;overflow:hidden;font-family:"Inter",sans-serif;color:#F3EFE4}
+/*COMMON*/
+.f04-bg{position:absolute;inset:0;background:#3B2A9B;background-image:repeating-linear-gradient(90deg,rgba(243,239,228,.08) 0 1px,rgba(0,0,0,0) 1px 120px)}
+#f04-price{position:absolute;right:72px;top:330px;font-family:"League Gothic";font-size:150px;line-height:.85;color:#F3EFE4;text-align:right}
+#f04-price small{display:block;font-family:"Space Mono";font-weight:700;font-size:20px;letter-spacing:.2em;color:#D6FF3F;margin-bottom:8px}
+#f04-board{position:absolute;left:96px;top:80px;display:flex;gap:12px}
+.f04-cell{position:relative;width:150px;height:170px;background:#2A2A31;overflow:hidden;border-bottom:4px solid #D6FF3F}
+.f04-cell::after{content:"";position:absolute;left:0;right:0;top:83px;height:4px;background:#121216}
+.f04-strip{position:absolute;left:0;top:0;width:150px}
+.f04-strip span{display:block;width:150px;height:170px;line-height:170px;text-align:center;font-family:"Archivo Black";font-size:120px;color:#F3EFE4}
+#f04-brule{position:absolute;left:96px;top:268px;width:1122px;height:3px;background:#D6FF3F;transform-origin:0 50%}
+#f04-lab{position:absolute;left:96px;top:330px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#F3EFE4}
+#f04-num{position:absolute;left:96px;top:370px;font-family:"League Gothic";font-size:230px;line-height:1;color:#D6FF3F;display:flex;font-variant-numeric:tabular-nums}
+#f04-wheel{position:relative;width:96px;height:230px;overflow:hidden}
+#f04-wstrip{position:absolute;left:0;top:0;width:96px}
+#f04-wstrip span{display:block;height:230px;line-height:1;text-align:center}
+#f04-sku{position:absolute;left:96px;top:930px;font-family:"Space Mono";font-weight:700;font-size:26px;letter-spacing:.16em;color:#D6FF3F;border:3px solid #D6FF3F;padding:10px 18px;white-space:nowrap}
+#f04-shoes{position:absolute;left:700px;top:300px;width:1150px;height:613px}
+#f04-shoes .shoe{left:0;top:0}
+</style>
+<div id="root" data-composition-id="f04-colorways" data-width="1920" data-height="1080">
+  <div id="f04-bg" class="clip f04-bg" data-start="0" data-duration="{{DUR}}" data-track-index="0"></div>
+  {{KIT|f04|04|COLORWAYS|violet}}
+  <div id="f04-shadow" class="shadow" style="left:760px;top:860px;width:1050px"></div>
+  <div id="f04-board"></div>
+  <div id="f04-brule"></div>
+  <div id="f04-lab">COLORWAY</div>
+  <div id="f04-num"><div id="f04-wheel"><div id="f04-wstrip"><span>1</span><span>2</span><span>3</span></div></div><div>/03</div></div>
+  <div id="f04-shoes">
+    {{PRODUCTO|carbon|1150|f04-s1}}
+    {{PRODUCTO|lima-ink|1150|f04-s2}}
+    {{PRODUCTO|coral|1150|f04-s3}}
+  </div>
+  <div id="f04-price"><small>PRECIO</small>$129</div>
+  <div id="f04-c1" class="chip" style="left:96px;top:700px;color:#F3EFE4">EDICIÓN 27 / 500</div>
+  <div id="f04-c2" class="chip" style="left:96px;top:770px;color:#D6FF3F">TALLAS 36–46</div>
+  <div id="f04-sku"><span id="f04-sku1">SKU RF-27-CB</span><span id="f04-sku2" style="position:absolute;left:18px;top:10px;opacity:0">SKU RF-27-LM</span><span id="f04-sku3" style="position:absolute;left:18px;top:10px;opacity:0">SKU RF-27-CR</span></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+(() => {
+  /*KITJS*/
+  const tl = gsap.timeline({ paused: true }); kit(tl, "f04", {{DUR}});
+  tl.fromTo("#f04-price", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 0.45);
+  tl.fromTo("#f04-c1", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.6);
+  tl.fromTo("#f04-c2", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.75);
+  tl.fromTo("#f04-shadow", { opacity: 0.6, scaleX: 0.9 }, { opacity: 1, scaleX: 1, duration: 0.65, ease: "sine.inOut", yoyo: true, repeat: 3 }, 0);
+  const B = 0.5217, H = 170, DRUM = " ABCDEFGHIJKLMNOPQRSTUVWXYZÓ";
+  const words = ["CARBÓN ", "LIMA   ", "CORAL  "];               // 7 cells
+  const board = document.getElementById("f04-board");
+  // per cell: one strip holding the three flip sequences back to back (blank → word1 → word2 → word3), 6 drum steps each
+  for (let c = 0; c < 7; c++) {
+    const cell = document.createElement("div"); cell.className = "f04-cell"; cell.id = "f04-cell" + c;
+    const strip = document.createElement("div"); strip.className = "f04-strip"; strip.id = "f04-strip" + c; strip.setAttribute("data-layout-allow-overflow", ""); strip.setAttribute("data-layout-allow-occlusion", "");
+    let seq = [" "], prev = " ";
+    words.forEach(w => {
+      const target = w[c], ti = DRUM.indexOf(target), pi = DRUM.indexOf(prev);
+      for (let k = 1; k <= 5; k++) seq.push(DRUM[(pi + Math.round(k * ((ti - pi + DRUM.length) % DRUM.length) / 6)) % DRUM.length]);
+      seq.push(target); prev = target;
+    });
+    strip.innerHTML = seq.map(ch => `<span>${ch === " " ? "&nbsp;" : ch}</span>`).join("");
+    cell.appendChild(strip); board.appendChild(cell);
+    // three flips: each advances 6 rows with a stepped ease, cells cascade 0.05s apart
+    [[0.0, 0.52], [1.043, 0.26], [2.087, 0.26]].forEach(([t, d], f) => {
+      tl.fromTo(strip, { y: -f * 6 * H }, { y: -(f + 1) * 6 * H, duration: d, ease: "steps(6)", immediateRender: false }, t + c * 0.05);
+    });
+  }
+  tl.fromTo("#f04-brule", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 0.1);
+  [1.043, 2.087].forEach(t => tl.to("#f04-brule", { keyframes: [{ scaleX: 1.04, duration: 0.08 }, { scaleX: 1, duration: 0.12 }] }, t + 0.2));
+  // number wheel 01 → 02 → 03 and SKU swaps
+  tl.fromTo("#f04-wstrip", { y: 0 }, { y: -230, duration: 0.3, ease: "power3.out", immediateRender: false }, 1.043);
+  tl.to("#f04-wstrip", { y: -460, duration: 0.3, ease: "power3.out" }, 2.087);
+  tl.fromTo("#f04-lab", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 0.08);
+  tl.fromTo("#f04-num", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 0.15);
+  tl.fromTo("#f04-sku", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(1.6)" }, 0.3);
+  tl.set("#f04-sku1", { opacity: 0 }, 1.043); tl.set("#f04-sku2", { opacity: 1 }, 1.043);
+  tl.set("#f04-sku2", { opacity: 0 }, 2.087); tl.set("#f04-sku3", { opacity: 1 }, 2.087);
+  // the shoe swaps colorway through 7 horizontal bands (stepped clip), in sync with the board
+  tl.fromTo("#f04-s2", { clipPath: "inset(0px 0px 100% 0px)" }, { clipPath: "inset(0px 0px 0% 0px)", duration: 0.3, ease: "steps(7)" }, 1.043);
+  tl.fromTo("#f04-s3", { clipPath: "inset(0px 0px 100% 0px)" }, { clipPath: "inset(0px 0px 0% 0px)", duration: 0.3, ease: "steps(7)" }, 2.087);
+  tl.fromTo("#f04-shoes", { y: 0 }, { y: -6, duration: 0.65, ease: "sine.inOut", yoyo: true, repeat: 3 }, 0);
+  window.__timelines["f04-colorways"] = tl;
+})();
+</script>
+</template>

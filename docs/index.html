@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>motion-ad: anuncios animados de tu producto con un solo prompt</title>
+<meta name="description" content="Guía paso a paso para instalar gratis motion-ad, la skill de Claude Code que convierte la descripción de tu producto en un anuncio de motion graphics con música y efectos de sonido. Sin After Effects.">
+<meta property="og:title" content="motion-ad — anuncios animados de tu producto con un solo prompt">
+<meta property="og:description" content="Describe tu producto y Claude te devuelve un anuncio de motion graphics de 15 segundos, con música y efectos. Gratis, en español, sin After Effects.">
+<meta property="og:image" content="https://diegodoc1111.github.io/motion-ad/img/og.jpg">
+<meta property="og:url" content="https://diegodoc1111.github.io/motion-ad/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fondo: #EEE8DB; --tinta: #1F1D1A; --texto: #3A3733; --suave: #6E6A63;
+    --terra: #D9774F; --terra-osc: #B85C37; --rosa: #F6DED5; --carta: #FBF8F2; --linea: #E0D8C8; --term: #1E1C1A;
+    --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--fondo); color: var(--texto); font: 17px/1.6 var(--sans); }
+  main { max-width: 720px; margin: 0 auto; padding: 32px 22px 64px; }
+  .cabeza { display: flex; align-items: flex-end; gap: 18px; margin: 8px 0 18px; }
+  .cabeza img { width: 92px; height: auto; image-rendering: pixelated; flex: none; }
+  .etiqueta { display: inline-block; font: 600 13px/1 var(--mono); letter-spacing: .08em; color: var(--terra-osc); background: var(--rosa); padding: 8px 12px; border-radius: 999px; }
+  h1 { font: 400 clamp(40px, 8.5vw, 62px)/1.02 var(--serif); color: var(--tinta); margin: 14px 0 14px; letter-spacing: -.01em; }
+  h1 em, h2 em { color: var(--terra); }
+  .bajada { font-size: 19px; margin: 0 0 22px; } .bajada strong { color: var(--tinta); }
+  .tecnicas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 0 0 10px; }
+  .tec { background: var(--carta); border: 1px solid var(--linea); border-radius: 14px; padding: 12px 8px 10px; text-align: center; }
+  .tec .e { display: block; font-size: 30px; line-height: 1.1; }
+  .tec b { display: block; font: 400 17px/1.1 var(--serif); color: var(--tinta); margin: 6px 0 4px; }
+  .tec small { display: block; font-size: 12.5px; line-height: 1.35; color: var(--suave); }
+  .veredicto-mini { display: flex; align-items: center; gap: 10px; background: var(--tinta); color: #E8E2D6; border-radius: 14px; padding: 12px 16px; margin: 0 0 26px; font-size: 15px; }
+  .veredicto-mini b { color: #fff; } .veredicto-mini span { font-size: 22px; }
+  @media (max-width: 600px) { .tecnicas { grid-template-columns: repeat(2, 1fr); } .tec:last-child { grid-column: span 2; } }
+  .avisos { display: grid; gap: 10px; margin: 0 0 34px; padding: 0; list-style: none; }
+  .avisos li { background: var(--carta); border: 1px solid var(--linea); border-radius: 14px; padding: 12px 16px; font-size: 15.5px; }
+  .avisos li b { color: var(--tinta); }
+  .paso { position: relative; margin: 0 0 30px; padding: 22px 20px 20px; background: var(--carta); border: 1px solid var(--linea); border-radius: 20px; }
+  .num { position: absolute; top: -16px; left: 18px; width: 36px; height: 36px; border-radius: 50%; background: var(--terra); color: #fff; font: 700 17px/36px var(--sans); text-align: center; box-shadow: 0 2px 0 var(--terra-osc); }
+  h2 { font: 400 30px/1.15 var(--serif); color: var(--tinta); margin: 8px 0 10px; }
+  h3 { font: 700 16px/1.3 var(--sans); color: var(--tinta); margin: 18px 0 6px; }
+  .paso p { margin: 0 0 12px; } .paso p:last-child { margin-bottom: 0; }
+  .paso ol, .paso ul { margin: 0 0 12px; padding-left: 22px; } .paso li { margin: 5px 0; }
+  .ruta { font-weight: 700; color: var(--tinta); } .ruta .f { color: var(--terra); font-weight: 400; padding: 0 2px; }
+  a { color: var(--terra-osc); text-underline-offset: 3px; }
+  .boton { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0 12px; padding: 16px 20px; border-radius: 999px; background: var(--terra); color: #fff; text-decoration: none; font: 700 18px/1.2 var(--sans); box-shadow: 0 3px 0 var(--terra-osc); }
+  .boton:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--terra-osc); }
+  .nota { font-size: 14.5px; color: var(--suave); }
+  .term { background: var(--term); border-radius: 14px; overflow: hidden; margin: 12px 0 0; box-shadow: 0 6px 20px rgba(30,20,15,.22); }
+  .term .barra { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: #2A2724; font: 12.5px var(--mono); color: #9E978C; }
+  .term .barra i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; } .term .barra span { margin-left: 8px; }
+  .term pre { margin: 0; padding: 14px 16px 16px; overflow-x: auto; font: 14px/1.7 var(--mono); color: #E8E2D6; white-space: pre-wrap; word-break: break-word; }
+  .term .p { color: var(--terra); }
+  .copiar { margin-top: 10px; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; border: 1px solid var(--linea); background: #fff; color: var(--tinta); border-radius: 999px; padding: 8px 14px; font: 600 14px var(--sans); }
+  .frases { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+  .frases li { font: 600 14px var(--mono); background: #fff; border: 1px solid var(--linea); border-radius: 999px; padding: 6px 12px; color: var(--tinta); }
+  .rondas { display: grid; gap: 10px; margin: 12px 0 0; }
+  .ronda { display: flex; gap: 14px; background: #fff; border: 1px solid var(--linea); border-radius: 14px; padding: 12px 14px; }
+  .ronda .n { flex: none; font: 400 30px/1 var(--serif); color: var(--terra); width: 26px; }
+  .ronda b { color: var(--tinta); }
+  .seccion { margin: 44px 0 0; } .seccion h2 { font-size: 32px; }
+  .seccion ul { padding-left: 22px; } .seccion li { margin: 6px 0; }
+  .muestra { background: #fff; border: 1px solid var(--linea); border-radius: 18px; padding: 10px; margin: 14px 0 0; box-shadow: 0 6px 20px rgba(60,40,30,.10); }
+  .muestra img { width: 100%; height: auto; display: block; border-radius: 10px; }
+  .muestra p { margin: 10px 6px 4px; font-size: 15px; }
+  details { background: var(--carta); border: 1px solid var(--linea); border-radius: 14px; padding: 14px 16px; margin: 10px 0; }
+  summary { cursor: pointer; font-weight: 700; color: var(--tinta); } details p { margin: 10px 0 0; }
+  code { font: 14px var(--mono); background: #fff; border: 1px solid var(--linea); border-radius: 6px; padding: 1px 6px; }
+  .loop { display: block; background: var(--rosa); border: 1px solid #EBC3B3; border-left: 6px solid var(--terra); border-radius: 14px;
+          padding: 14px 16px; margin: 0 0 30px; font-size: 16px; color: var(--tinta); text-decoration: none; }
+  .loop b { color: var(--terra-osc); } .loop span { display: block; margin-top: 6px; font-weight: 700; color: var(--terra-osc); }
+  .imperio { margin: 48px 0 0; padding: 26px 22px 24px; border-radius: 22px; background: var(--tinta); color: #E8E2D6; }
+  .imperio h2 { color: #fff; font-size: 34px; margin-top: 0; } .imperio h2 em { color: var(--terra); }
+  .imperio p { margin: 0 0 14px; } .imperio b { color: #fff; }
+  .imperio ul { list-style: none; padding: 0; margin: 0 0 18px; display: grid; gap: 8px; }
+  .imperio li { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 10px 14px; }
+  .imperio .cifra { font: 400 26px/1.25 var(--serif); color: #fff; margin: 6px 0 16px; }
+  .imperio .cifra em { color: var(--terra); }
+  .imperio .boton { margin-bottom: 8px; } .imperio .nota { color: #B9B2A6; }
+  footer { margin-top: 52px; padding-top: 22px; border-top: 1px solid var(--linea); font-size: 15px; color: var(--suave); }
+  footer a { color: var(--tinta); font-weight: 700; text-decoration: none; } footer em { font-family: var(--serif); font-size: 19px; color: var(--terra); }
+</style>
+</head>
+<body>
+<main>
+
+  <div class="cabeza">
+    <img src="img/mascota-regalo.png" alt="">
+    <span class="etiqueta">GRATIS · EN ESPAÑOL · PARA CLAUDE CODE</span>
+  </div>
+
+  <h1>Anuncios animados de tu producto con <em>un solo prompt</em></h1>
+  <p class="bajada">Es <strong>motion-ad</strong>, una skill para Claude Code. Le describes tu producto y te devuelve un <strong>anuncio de motion graphics</strong> hecho con código: el producto dibujado por partes que se desarma, cambia de color, cae y se revela; tipografía de póster, cifras gigantes y un cierre de catálogo. Sin After Effects, sin animador.</p>
+
+  <div class="tecnicas" aria-label="Lo que hace">
+    <div class="tec"><span class="e">🔍</span><b>Revelado</b><small>Una línea barre y aparece el producto</small></div>
+    <div class="tec"><span class="e">🧩</span><b>Anatomía 3D</b><small>Se desarma por partes y se vuelve a armar</small></div>
+    <div class="tec"><span class="e">💥</span><b>Slam</b><small>Palabras y cifras gigantes que golpean</small></div>
+    <div class="tec"><span class="e">🎨</span><b>Colores</b><small>Cambia de variante al compás</small></div>
+    <div class="tec"><span class="e">🏁</span><b>Cierre</b><small>Producto de catálogo con su etiqueta</small></div>
+  </div>
+  <div class="veredicto-mini"><span>🔊</span><div>Y por debajo, <b>la música cortada al compás</b> y <b>40-60 efectos de sonido</b> puestos en cada golpe. Hasta con el sonido.</div></div>
+
+  <ul class="avisos">
+    <li>💻 <b>Funciona en Claude Code</b> (plan Pro o superior). Todo se renderiza en tu computador; no pide llaves ni cuentas.</li>
+    <li>⏱️ <b>Un anuncio de 15 s toma una hora larga</b> de diseño con Claude. El render tarda uno o dos minutos.</li>
+    <li>🎯 <b>Es para anuncios SIN presentador.</b> Si quieres aparecer tú, usa <a href="https://github.com/diegodoc1111/reel-motion">reel-motion</a>.</li>
+  </ul>
+
+  <a class="loop" href="#imperio">🎁 <b>Esta skill es solo 1 de los agentes de Imperio</b>, el equipo de IA que hace el marketing y trae las ventas de los negocios de mis clientes: con él hacen en 3 días lo que antes les tomaba 30.<span>Al final te cuento qué hacen los demás agentes ↓</span></a>
+
+  <section class="paso">
+    <div class="num">1</div>
+    <h2>Ten <em>Claude Code</em></h2>
+    <p>Necesitas una cuenta de Claude con plan <b>Pro</b> (o superior) y la app de escritorio de Claude: ahí está la pestaña <span class="ruta">Code</span>, que es donde vive esta skill. Si ya la usas, salta al paso 2.</p>
+    <a class="boton" href="https://claude.ai/download" target="_blank" rel="noopener">Descargar la app de Claude →</a>
+    <p class="nota">Con el plan gratis no funciona: Claude Code necesita Pro. También sirve desde la terminal si ya tienes <code>claude</code> instalado.</p>
+  </section>
+
+  <section class="paso">
+    <div class="num">2</div>
+    <h2>Instala la skill (pega <em>un mensaje</em>)</h2>
+    <p>Abre la pestaña <span class="ruta">Code</span>, elige cualquier carpeta y pega esto:</p>
+    <div class="term">
+      <div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Claude Code</span></div>
+      <pre><span class="p">❯</span> Instala esta skill de Claude Code: clónala desde https://github.com/diegodoc1111/motion-ad dentro de ~/.claude/skills/motion-ad y corre su instalador (scripts/instalar.py). Si falta algún programa, instálalo conmigo paso a paso.</pre>
+    </div>
+    <button class="copiar" type="button" data-copiar="Instala esta skill de Claude Code: clónala desde https://github.com/diegodoc1111/motion-ad dentro de ~/.claude/skills/motion-ad y corre su instalador (scripts/instalar.py). Si falta algún programa, instálalo conmigo paso a paso.">📋 Copiar el mensaje</button>
+    <p class="nota" style="margin-top:12px">El instalador revisa que tengas Python, Node.js y ffmpeg (gratis); si falta alguno, Claude te dice cómo instalarlo. Cuando diga <b>"Listo para usar"</b>, abre una conversación nueva.</p>
+  </section>
+
+  <section class="paso">
+    <div class="num">3</div>
+    <h2>Pide tu <em>primer anuncio</em></h2>
+    <p>En una conversación nueva, describe tu producto: qué es, marca, colores, 3-4 datos que presumir, un lema y la ruta de una canción libre de derechos (por ejemplo de <a href="https://pixabay.com/music/" target="_blank" rel="noopener">Pixabay Music</a>):</p>
+    <div class="term">
+      <div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Claude Code</span></div>
+      <pre><span class="p">❯</span> Hazme un anuncio animado de 15 segundos con motion-ad. Producto: una botella térmica de acero, marca NORTE, modelo N-500. Colores: negro mate con detalles naranja, y una variante blanca. Datos: 24 h frío, 12 h calor, 500 ml, 290 g. Lema: "FRÍO QUE DURA". Música: C:\Musica\upbeat.mp3</pre>
+    </div>
+    <button class="copiar" type="button" data-copiar="Hazme un anuncio animado de 15 segundos con motion-ad. Producto: una botella térmica de acero, marca NORTE, modelo N-500. Colores: negro mate con detalles naranja, y una variante blanca. Datos: 24 h frío, 12 h calor, 500 ml, 290 g. Lema: &quot;FRÍO QUE DURA&quot;. Música: C:\Musica\upbeat.mp3">📋 Copiar el ejemplo</button>
+    <h3>Qué pasa por dentro</h3>
+    <div class="rondas">
+      <div class="ronda"><span class="n">1</span><div><b>Dibuja tu producto</b> como un vector por partes (si le das una foto, lo dibuja parecido) y te muestra capturas para que apruebes.</div></div>
+      <div class="ronda"><span class="n">2</span><div><b>Analiza la música</b>: detecta el tempo, recorta la pista para que un compás caiga en el segundo 0 y corta las escenas ahí.</div></div>
+      <div class="ronda"><span class="n">3</span><div><b>Diseña 6-9 escenas</b>, cada una con una técnica distinta, pone los efectos de sonido, revisa su propio trabajo y te entrega un <b>borrador</b>.</div></div>
+      <div class="ronda"><span class="n">4</span><div><b>Pides cambios</b> y, cuando apruebas, exporta el final a 60 cuadros por segundo.</div></div>
+    </div>
+  </section>
+
+  <section class="paso">
+    <div class="num">4</div>
+    <h2>Cosas que puedes <em>pedirle</em></h2>
+    <ul class="frases">
+      <li>cambia el acento por el azul de mi marca</li><li>que el cierre muestre el precio</li><li>hazlo vertical</li><li>el dato héroe es 24 horas</li><li>más corto, 10 segundos</li><li>compáralo con este anuncio y dime qué le falta</li>
+    </ul>
+    <p class="nota" style="margin-top:12px">No tienes que saber de animación: técnicas, tiempos, tipografías y sonidos los decide Claude. Tú decides producto, colores, datos y lema.</p>
+  </section>
+
+  <section class="seccion" id="ejemplo">
+    <h2>Así <em>se ve</em> (hecho con esta skill)</h2>
+    <div class="muestra">
+      <img src="img/ejemplo.jpg" alt="Ocho cuadros del anuncio de ejemplo: un tenis RÁFAGA RF-27 revelado, desarmado en 3D, cayendo, cambiando de color, en un túnel de velocidad, en el laboratorio, el lockup y el cierre de catálogo">
+      <p>Las 8 escenas del anuncio del tenis <b>RÁFAGA RF-27</b> (marca ficticia), 15 segundos, hecho a partir de un solo prompt. Viene incluido en la skill como ejemplo para que Claude lo estudie.</p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <h2>Si algo no <em>funciona</em></h2>
+    <details>
+      <summary>Claude dice que falta Python, Node.js o ffmpeg</summary>
+      <p>Son gratis. El instalador imprime el comando exacto para tu sistema (en Windows, por ejemplo, <code>winget install OpenJS.NodeJS.LTS</code>). Pídele a Claude que lo corra contigo y vuelve a lanzar el instalador.</p>
+    </details>
+    <details>
+      <summary>¿Trae música?</summary>
+      <p>No, por derechos de autor. Baja una pista libre de derechos (Pixabay Music, Mixkit) y pásale la ruta. Sin música, el anuncio sale con efectos de sonido y te avisa.</p>
+    </details>
+    <details>
+      <summary>¿Puedo darle una foto de mi producto?</summary>
+      <p>Sí. Claude la usa para dibujar el producto parecido como vector por partes (no pega la foto): así puede desarmarlo, cambiarle el color y convertirlo en boceto.</p>
+    </details>
+    <details>
+      <summary>¿Cuánto gasta de mi plan?</summary>
+      <p>Lo que más gasta es diseñar las escenas (es código). Un anuncio de 15 s con una ronda de ajustes cabe en una sesión normal. El render corre en tu computador y no gasta nada.</p>
+    </details>
+    <details>
+      <summary>¿Funciona en Mac?</summary>
+      <p>Está preparada para Mac y Linux, pero se ha probado sobre todo en Windows. Si algo falla, abre un <i>issue</i> en GitHub con el error.</p>
+    </details>
+    <details>
+      <summary>¿Puedo usarla para mis clientes?</summary>
+      <p>Sí. La skill es MIT: úsala, adáptala y cobra por los anuncios que hagas con ella.</p>
+    </details>
+  </section>
+
+  <section class="imperio" id="imperio">
+    <h2>Esto es solo <em>1 de los agentes</em> de Imperio</h2>
+    <p>Esta skill hace tu <b>anuncio</b>. En Imperio tengo <b>todo un equipo de agentes de IA</b> que además <b>ejecuta</b>: hace el trabajo de marketing por ti y genera las ventas del negocio:</p>
+    <ul>
+      <li>✍️ Escriben tus guiones, tus anuncios y tu video de ventas (VSL).</li>
+      <li>🎬 Editan tus reels y crean anuncios animados.</li>
+      <li>📊 Montan y ajustan tus campañas en Meta Ads.</li>
+      <li>🖼️ Diseñan tus carruseles y miniaturas.</li>
+      <li>💬 Responden por WhatsApp e Instagram y agendan a tus clientes.</li>
+    </ul>
+    <p class="cifra">Haces en <em>3 días</em> lo que antes te tomaba <em>30</em>.</p>
+    <p>Es exactamente lo mismo que usan mis clientes, que han sumado <b>entre 5.000 y 10.000 dólares extra cada mes</b> a su facturación.</p>
+    <a class="boton" href="https://ig.me/m/soydiegoosorio" target="_blank" rel="noopener">Escríbeme “IMPERIO” por Instagram →</a>
+    <p class="nota">Te cuento cómo funciona y si encaja con tu negocio.</p>
+  </section>
+
+  <footer>
+    <p>Hecha por <a href="https://instagram.com/soydiegoosorio">@soydiegoosorio</a>. Renderiza con <a href="https://github.com/heygen-com/hyperframes">HyperFrames</a> (código abierto). El código está en <a href="https://github.com/diegodoc1111/motion-ad">GitHub</a>; cada vez que la instalas te llevas la versión más nueva.</p>
+    <p><em>Úsala, pruébala y compártela.</em></p>
+  </footer>
+
+</main>
+<script>
+  document.querySelectorAll(".copiar").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var t = b.getAttribute("data-copiar");
+      var listo = function () { var o = b.textContent; b.textContent = "✅ Copiado"; setTimeout(function () { b.textContent = o; }, 1600); };
+      if (navigator.clipboard) { navigator.clipboard.writeText(t).then(listo, function () {}); }
+    });
+  });
+</script>
+</body>
+</html>
