@@ -4,12 +4,14 @@
  "reel": "MARCA · MOTION REEL 2026",
  "lienzo": [1920, 1080],
  "producto": "assets/producto.svg",
- "paleta": {"ink": "#121216", "paper": "#F3EFE4", "acento": "#D6FF3F", "impacto": "#FF4A3D"},
+ "paleta": {"ink": "#121216", "paper": "#F3EFE4", "acento": "#D6FF3F", "acento-tinta": "#6E8A00", "impacto": "#FF4A3D"},
+ "_nota": "acento-tinta = version oscura del acento para TEXTO sobre papel (el acento puro casi nunca da 3:1). Sobre ink va el acento puro.",
  "colorways": {
   "base":     "--c-body:#2A2A31;--c-body2:#3A3A44;--c-cap:#F3EFE4;--c-label:#F3EFE4;--c-accent:#D6FF3F;--c-ink:#121216;--c-shade:rgba(18,18,22,.18);--c-hi:rgba(243,239,228,.28);--c-stitch:rgba(243,239,228,.55)",
   "acento":   "--c-body:#D6FF3F;--c-body2:#B8E02A;--c-cap:#121216;--c-label:#121216;--c-accent:#121216;--c-ink:#121216;--c-shade:rgba(18,18,22,.18);--c-hi:rgba(243,239,228,.28);--c-stitch:rgba(18,18,22,.55)",
   "wire":     "--c-body:none;--c-body2:none;--c-cap:none;--c-label:none;--c-accent:none;--c-ink:#D6FF3F;--c-shade:none;--c-hi:none;--c-stitch:none",
-  "wire-ink": "--c-body:none;--c-body2:none;--c-cap:none;--c-label:none;--c-accent:none;--c-ink:#121216;--c-shade:none;--c-hi:none;--c-stitch:none"
+  "wire-ink": "--c-body:none;--c-body2:none;--c-cap:none;--c-label:none;--c-accent:none;--c-ink:#121216;--c-shade:none;--c-hi:none;--c-stitch:none",
+  "wire-paper": "--c-body:none;--c-body2:none;--c-cap:none;--c-label:none;--c-accent:none;--c-ink:#F3EFE4;--c-shade:none;--c-hi:none;--c-stitch:none"
  },
  "tonos": {
   "ink":   ["rgba(243,239,228,.7)", "rgba(243,239,228,.07)"],

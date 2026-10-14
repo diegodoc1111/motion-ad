@@ -11,6 +11,7 @@ colors:
   ink: "#121216"        # casi negro, frío — fondo "laboratorio"
   paper: "#F3EFE4"      # blanco cálido — fondo "impreso"
   acento: "#D6FF3F"     # EL acento (uno solo; pon aquí el color de la marca si lo tiene)
+  acento-tinta: "#6E8A00" # el acento OSCURECIDO para texto sobre paper (>= 3:1); sobre ink se usa el acento puro
   impacto: "#FF4A3D"    # segundo registro, racionado: golpes, sellos, un colorway
   graphite: "#2A2A31"   # superficies oscuras
   smoke: "#8E8C86"      # texto secundario sobre ink, reglas sobre paper

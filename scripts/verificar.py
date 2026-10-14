@@ -3,7 +3,9 @@
 motion-ad · VERIFICAR — revisa un render ANTES de decir "listo": formato, duración, volumen, y una hoja de
 contacto con un cuadro cada N segundos para mirarla.
 
-    python verificar.py <video.mp4> [--paso 0.5] [--columnas 8] [--ancho 480] [--salida snaps/hoja.jpg] [--esperado P]
+    python verificar.py <video.mp4> [--paso 0.5] [--columnas 8] [--ancho 480] [--salida snaps/hoja.jpg] [--esperado P] [--ultimo]
+
+  --ultimo       guarda además el ÚLTIMO cuadro a tamaño completo (renders/ultimo-cuadro.png): la hoja es muy pequeña para juzgar el cierre
 
   --esperado P   compara la duración con el "duracion" de P/plan.json
 La hoja no lleva rótulos: el cuadro número n (contando desde 0, de izquierda a derecha y de arriba abajo)
@@ -45,6 +47,10 @@ def main():
     r = subprocess.run(['ffmpeg', '-y', '-v', 'error', '-i', v, '-vf', f'fps=1/{paso},scale={ancho}:-2,tile={cols}x{filas}', '-frames:v', '1', '-q:v', '3', salida])
     if r.returncode == 0: print(f'hoja: {salida}  ({n} cuadros, uno cada {paso} s, {cols} por fila: el cuadro n es el segundo n×{paso}; las celdas negras del final son relleno)')
     else: print('[aviso] no se pudo hacer la hoja de contacto')
+    if '--ultimo' in sys.argv:
+        u = os.path.join(os.path.dirname(v) or '.', 'ultimo-cuadro.png')
+        r = subprocess.run(['ffmpeg', '-y', '-v', 'error', '-sseof', '-0.08', '-i', v, '-frames:v', '1', '-update', '1', u])
+        print('último cuadro:', u if r.returncode == 0 else '[aviso] no se pudo extraer')
     print('Mírala: ¿el último cuadro parece producto real (no dibujo)? ¿nada se monta ni se corta? ¿cada escena tiene algo nuevo?')
 
 if __name__ == '__main__':

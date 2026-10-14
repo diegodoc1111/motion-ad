@@ -3,10 +3,10 @@
 motion-ad · CONSTRUIR — arma compositions/frames/*.html a partir de frames-src/*.html:
 inyecta el producto (assets/producto.svg) en cada colorway, el kit de densidad y la duración de cada escena.
 
-    python construir.py <P>
+    python construir.py <P> [--solo fNN]      (--solo: construye solo esa escena, para ver el producto antes de tener todas)
 
 Marcadores que entiende dentro de frames-src/*.html:
-  {{PRODUCTO|colorway|ancho_px|id|clases extra}}   el producto, con las variables de color de ese colorway (diseno.json)
+  {{PRODUCTO|colorway|ancho_px|id|clases extra|atributos}}   el producto con las variables de ese colorway (diseno.json); 5.º campo opcional = atributos (p. ej. data-layout-allow-overflow)
   {{KIT|fNN|NN|NOMBRE|tono}}                        marcas de registro, slate arriba, "SC NN / total" abajo, número fantasma, puntos y grano
   {{DUR}}                                           duración del slot de esa escena (la escena + el solape de la transición que le sigue)
   /*COMMON*/   (en el <style>)                       CSS del producto, del kit, .shadow, .chip, .cota
@@ -19,7 +19,7 @@ import sys, os, re, glob, json
 
 def main():
     if len(sys.argv) < 2: raise SystemExit(__doc__)
-    P = sys.argv[1]
+    P = sys.argv[1]; solo = sys.argv[sys.argv.index('--solo') + 1] if '--solo' in sys.argv else None
     dis = json.load(open(os.path.join(P, 'diseno.json'), encoding='utf-8'))
     plan = json.load(open(os.path.join(P, 'plan.json'), encoding='utf-8'))
     W, H = plan.get('lienzo', dis.get('lienzo', [1920, 1080]))
@@ -42,13 +42,13 @@ def main():
         SVG = SVG.replace('<svg ', '<svg style="display:block;overflow:visible" ', 1)
     CW = dis['colorways']
     def producto(m):
-        cw, w, idv, cls = m.group(1), int(m.group(2)), m.group(3), (m.group(4) or '').strip()
+        cw, w, idv, cls, attrs = m.group(1), int(m.group(2)), m.group(3), (m.group(4) or '').strip(), (m.group(5) or '').strip()
         if cw not in CW: raise SystemExit(f'colorway "{cw}" no está en diseno.json (hay: {", ".join(CW)})')
         h = round(w * vh / vw)
         svg = SVG.replace('<svg ', f'<svg width="{w}" height="{h}" ', 1)
         wire = ' wire' if cw.startswith('wire') else ''
         vars_ = CW[cw] if isinstance(CW[cw], str) else ';'.join(f'{k}:{v}' for k, v in CW[cw].items())
-        return f'<div id="{idv}" class="producto{wire} {cls}" style="width:{w}px;height:{h}px;{vars_}">{svg}</div>'
+        return f'<div id="{idv}" class="producto{wire} {cls}" {attrs} style="width:{w}px;height:{h}px;{vars_}">{svg}</div>'
 
     GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'300\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'300\' height=\'300\' filter=\'url(%23n)\'/%3E%3C/svg%3E")'
     TONOS = dis.get('tonos') or {'ink': ['rgba(243,239,228,.7)', 'rgba(243,239,228,.07)'], 'paper': ['rgba(18,18,22,.7)', 'rgba(18,18,22,.07)']}
@@ -88,9 +88,9 @@ def main():
     n = 0
     for src in sorted(glob.glob(os.path.join(P, 'frames-src', '*.html'))):
         nombre = os.path.splitext(os.path.basename(src))[0]
-        if nombre.startswith('_'): continue
+        if nombre.startswith('_') or (solo and nombre != solo): continue
         s = re.sub(r'\s*data-hf-id="[^"]*"', '', open(src, encoding='utf-8').read())
-        s = re.sub(r'\{\{PRODUCTO\|([\w-]+)\|(\d+)\|([\w-]+)\|?([^}]*)\}\}', producto, s)
+        s = re.sub(r'\{\{PRODUCTO\|([\w-]+)\|(\d+)\|([\w-]+)\|?([^}|]*)\|?([^}]*)\}\}', producto, s)
         s = re.sub(r'\{\{KIT\|([\w-]+)\|(\d+)\|([^|]+)\|(\w+)\}\}', kit, s)
         s = s.replace('/*COMMON*/', COMMON_CSS + KIT_CSS).replace('/*KITJS*/', KIT_JS)
         if '{{DUR}}' in s:
@@ -100,7 +100,7 @@ def main():
         open(out, 'w', encoding='utf-8').write(s); n += 1
         print('OK', nombre + '.html', len(s), 'bytes', f'· slot {duraciones.get(nombre, "?")} s')
     faltan = [e['id'] for e in esc if not os.path.exists(os.path.join(P, 'frames-src', e['id'] + '.html'))]
-    if faltan: print('[aviso] escenas del plan sin archivo en frames-src/:', ', '.join(faltan))
+    if faltan and not solo: print('[aviso] escenas del plan sin archivo en frames-src/:', ', '.join(faltan))
     print(f'{n} escenas construidas')
 
 if __name__ == '__main__':

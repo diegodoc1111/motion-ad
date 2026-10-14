@@ -3,7 +3,7 @@
 motion-ad · ENSAMBLAR — escribe P/index.html a partir de P/plan.json: un slot por escena (con el solape que
 necesita su transición), las transiciones en el timeline raíz, la música y los efectos de sonido.
 
-    python ensamblar.py <P>
+    python ensamblar.py <P> [--solo fNN]      (--solo: index.html con UNA escena desde t=0, sin transiciones; vuelve a correr sin --solo al final)
 
 plan.json:
 {
@@ -27,42 +27,61 @@ def dur_audio(p, cache={}):
     return cache[p]
 
 def seam(tipo, A, B, T, W):
+    """tweens de la costura: (selector, from, to, posicion) o ('set', selector, vars, posicion)"""
     if tipo == 'zoom':
-        return (f'  tl.fromTo("#{A}", {{ scale: 1, filter: "blur(0px)", opacity: 1 }}, {{ scale: 1.22, filter: "blur(18px)", opacity: 0, duration: 0.25, ease: "power3.in" }}, {T});\n'
-                f'  tl.fromTo("#{B}", {{ scale: 0.78, filter: "blur(16px)" }}, {{ scale: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }}, {T});\n')
+        return [(f'#{A}', '{ scale: 1, filter: "blur(0px)", opacity: 1 }', '{ scale: 1.22, filter: "blur(18px)", opacity: 0, duration: 0.25, ease: "power3.in" }', T),
+                (f'#{B}', '{ scale: 0.78, filter: "blur(16px)" }', '{ scale: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }', T)]
     if tipo == 'barrido':
-        return (f'  tl.fromTo("#{A}", {{ x: 0, filter: "blur(0px)" }}, {{ x: {-int(W*0.22)}, filter: "blur(22px)", duration: 0.3, ease: "power3.in" }}, {T});\n'
-                f'  tl.fromTo("#{B}", {{ x: {int(W*0.22)}, filter: "blur(22px)" }}, {{ x: 0, filter: "blur(0px)", duration: 0.32, ease: "power3.out" }}, {T});\n')
+        return [(f'#{A}', '{ x: 0, filter: "blur(0px)" }', f'{{ x: {-int(W*0.22)}, filter: "blur(22px)", duration: 0.3, ease: "power3.in" }}', T),
+                (f'#{B}', f'{{ x: {int(W*0.22)}, filter: "blur(22px)" }}', '{ x: 0, filter: "blur(0px)", duration: 0.32, ease: "power3.out" }', T)]
     if tipo == 'cromatico':
         D = 0.36
-        return (f'  tl.fromTo("#{B}", {{ clipPath: "inset(0px 0px 0px {W}px)" }}, {{ clipPath: "inset(0px 0px 0px 0px)", duration: {D}, ease: "power4.inOut" }}, {T});\n'
-                f'  tl.fromTo("#{A}", {{ x: 0, filter: "blur(0px)" }}, {{ x: {-int(W*0.135)}, filter: "blur(14px)", duration: {D}, ease: "power3.in" }}, {T});\n'
-                f'  tl.fromTo("#wipe-edge", {{ x: {W}, opacity: 1 }}, {{ x: -60, opacity: 1, duration: {D}, ease: "power4.inOut" }}, {T});\n'
-                f'  tl.set("#wipe-edge", {{ opacity: 0 }}, {round(T + D, 3)});\n'
-                f'  tl.fromTo("#flash", {{ opacity: 0 }}, {{ opacity: 0.85, duration: 1 / 30, ease: "none" }}, {round(T + D * 0.5, 3)});\n'
-                f'  tl.to("#flash", {{ opacity: 0, duration: 2 / 30, ease: "none" }}, {round(T + D * 0.5 + 1 / 30, 3)});\n')
+        return [(f'#{B}', f'{{ clipPath: "inset(0px 0px 0px {W}px)" }}', f'{{ clipPath: "inset(0px 0px 0px 0px)", duration: {D}, ease: "power4.inOut" }}', T),
+                (f'#{A}', '{ x: 0, filter: "blur(0px)" }', f'{{ x: {-int(W*0.135)}, filter: "blur(14px)", duration: {D}, ease: "power3.in" }}', T),
+                ('#wipe-edge', f'{{ x: {W}, opacity: 1 }}', f'{{ x: -60, opacity: 1, duration: {D}, ease: "power4.inOut" }}', T),
+                ('set', '#wipe-edge', '{ opacity: 0 }', round(T + D, 3)),
+                ('#flash', '{ opacity: 0 }', '{ opacity: 0.85, duration: 1 / 30, ease: "none" }', round(T + D * 0.5, 3)),
+                ('#flash', '{ opacity: 0.85 }', '{ opacity: 0, duration: 2 / 30, ease: "none" }', f'{round(T + D * 0.5, 3)} + 1 / 30')]
     if tipo == 'flash':
-        return (f'  tl.fromTo("#flash", {{ opacity: 0 }}, {{ opacity: 1, duration: 0.07, ease: "power2.in" }}, {round(T - 0.07, 3)});\n'
-                f'  tl.to("#flash", {{ opacity: 0, duration: 0.22, ease: "power2.out" }}, {T});\n')
-    return f'  // {A} → {B}: corte seco en {T}\n'
+        return [('#flash', '{ opacity: 0 }', '{ opacity: 1, duration: 0.07, ease: "power2.in" }', round(T - 0.07, 3)),
+                ('#flash', '{ opacity: 1 }', '{ opacity: 0, duration: 0.22, ease: "power2.out" }', T)]
+    return []
+
+def render_seams(lista, usados):
+    out = ''
+    for t in lista:
+        if t[0] == 'set':
+            out += f'  tl.set("{t[1]}", {t[2]}, {t[3]});\n'; continue
+        sel, fr, to, pos = t
+        if sel in usados: to = to.rstrip(' }') + ', immediateRender: false }'   # 2.º tween del mismo elemento: no pisa el estado inicial
+        usados.add(sel)
+        out += f'  tl.fromTo("{sel}", {fr}, {to}, {pos});\n'
+    return out
 
 def main():
     if len(sys.argv) < 2: raise SystemExit(__doc__)
     P = sys.argv[1]; plan = json.load(open(os.path.join(P, 'plan.json'), encoding='utf-8'))
+    solo = sys.argv[sys.argv.index('--solo') + 1] if '--solo' in sys.argv else None
     W, H = plan.get('lienzo', [1920, 1080]); dur = float(plan['duracion']); fondo = plan.get('fondo', '#121216')
-    esc = plan['escenas']; col = plan.get('transicion_colores', {}); borde = col.get('borde', ['#FF4A3D', '#D6FF3F']); flash = col.get('flash', '#FFFFFF')
+    esc = plan['escenas']
+    if solo:   # una sola escena desde t=0, sin transiciones; los cues se recortan a su ventana
+        e0 = next((e for e in esc if e['id'] == solo), None) or sys.exit(f'--solo: {solo} no esta en plan.json')
+        off = float(e0['inicio']); dur = round(float(e0['fin']) - off, 3)
+        esc = [{'id': solo, 'inicio': 0, 'fin': dur, 'entrada': 'corte'}]; plan['duracion'] = dur
+        plan['sfx'] = [[round(float(c[0]) - off, 3)] + list(c[1:]) for c in plan.get('sfx', []) if off <= float(c[0]) < off + dur]
+    col = plan.get('transicion_colores', {}); borde = col.get('borde', ['#FF4A3D', '#D6FF3F']); flash = col.get('flash', '#FFFFFF')
     for e in esc:
         if e.get('entrada', 'corte') not in SOLAPE: raise SystemExit(f'entrada desconocida en {e["id"]}: {e["entrada"]}')
         if not os.path.exists(os.path.join(P, 'compositions', 'frames', e['id'] + '.html')):
             print(f'  [aviso] falta compositions/frames/{e["id"]}.html (corre construir.py)')
-    slots, seams, zi = [], '', ''
+    slots, seams, zi, usados = [], '', '', set()
     for i, e in enumerate(esc):
         sig = esc[i + 1] if i + 1 < len(esc) else None
         d = round(float(e['fin']) - float(e['inicio']) + (SOLAPE[sig.get('entrada', 'corte')] if sig else 0), 3)
         slots.append(f'      <div id="f{i+1}" data-composition-id="{e["id"]}" data-composition-src="compositions/frames/{e["id"]}.html" '
                      f'data-start="{e["inicio"]}" data-duration="{d}" data-track-index="{1 + i % 2}" data-width="{W}" data-height="{H}"></div>')
         zi += f' #f{i+1} {{ z-index: {i+1} }}'
-        if i: seams += f'  // --- f{i} → f{i+1} : {e.get("entrada", "corte")} en {e["inicio"]}\n' + seam(e.get('entrada', 'corte'), f'f{i}', f'f{i+1}', e['inicio'], W)
+        if i: seams += f'  // --- f{i} → f{i+1} : {e.get("entrada", "corte")} en {e["inicio"]}\n' + render_seams(seam(e.get('entrada', 'corte'), f'f{i}', f'f{i+1}', e['inicio'], W), usados)
     audio = []
     m = plan.get('musica')
     if m and os.path.exists(os.path.join(P, m['archivo'])):
@@ -118,7 +137,7 @@ def main():
 </html>
 '''
     open(os.path.join(P, 'index.html'), 'w', encoding='utf-8').write(html)
-    print(f'index.html: {len(esc)} escenas · {len(audio)} pistas de audio · {dur} s · {W}x{H}')
+    print(f'index.html: {len(esc)} escenas · {len(audio)} pistas de audio · {dur} s · {W}x{H}' + (f'  [SOLO {solo}: vuelve a correr sin --solo antes del render final]' if solo else ''))
 
 if __name__ == '__main__':
     main()
